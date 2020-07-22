@@ -9,10 +9,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Environment;
 import android.os.IBinder;
 import android.widget.Toast;
+
+import java.io.File;
 
 public class DownloadService extends Service {
 
@@ -58,6 +62,10 @@ public class DownloadService extends Service {
             stopForeground(true);
             getNotificationManager().notify(1,getNotification("Download Failed",-1,CHANNEL_ID,CHANNEL_NAME));
             Toast.makeText(DownloadService.this,"Download Failed", Toast.LENGTH_SHORT).show();
+
+            String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+            File file = new File(directory + "/test.mp4");
+            file.delete();
         }
 
 

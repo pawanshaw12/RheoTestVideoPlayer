@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressBar pgsBar;
     private boolean checkfile;
     public static final String CHECKFILE="checkfile";
-    public static final String SHARED_PREFS="sharedPrefs";
+    public static final String SHARED_PREFS="sharedPrefs"; //For Checking if file Exists and already been Downloaded
 
     int progressU;
 
@@ -157,12 +159,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
 
             case R.id.start_download:
+
+
                 String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
                 File file = new File(directory + "/test.mp4");
 
                 String url ="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4" ;
                 if(!file.exists()){
+                    if(isNetworkAvailable())
                     downloadBinder.startDownload(url);
+                    else
+                        Toast.makeText(MainActivity.this,"Internet Issue", Toast.LENGTH_SHORT).show();
 
                 }else{
                     Toast.makeText(MainActivity.this,"File Already Exists", Toast.LENGTH_SHORT).show();
@@ -213,7 +220,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SharedPreferences sharedPreferences= getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
         checkfile=sharedPreferences.getBoolean(CHECKFILE,false);
     }
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     @Override
     protected void onPause() {
