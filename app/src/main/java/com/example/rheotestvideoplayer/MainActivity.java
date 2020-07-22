@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         loadData();
         //Setting up the Player
         final CustomVideoPlayer customVideoPlayer = findViewById(R.id.customVideoPlayer);
-        String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath();
+        String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
         File file = new File(directory + "/test.mp4");
         String Url= String.valueOf(Uri.fromFile(file));
         //If File exists then Show the Player
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 saveData();
                 CustomVideoPlayer customVideoPlayer = findViewById(R.id.customVideoPlayer);
                 customVideoPlayer.setVisibility(View.VISIBLE);
-                String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath();
+                String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
                 File file = new File(directory + "test.mp4");
                 String Url= String.valueOf(Uri.fromFile(file));
                 customVideoPlayer.setMediaUrl(Url)
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
 
             case R.id.start_download:
-                String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath();
+                String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
                 File file = new File(directory + "/test.mp4");
 
                 String url ="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4" ;

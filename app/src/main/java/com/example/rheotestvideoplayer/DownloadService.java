@@ -44,7 +44,7 @@ public class DownloadService extends Service {
             downloadTask = null;
             stopForeground(true);
             getNotificationManager().notify(1,getNotification("Download Success",-1,CHANNEL_ID,CHANNEL_NAME));
-            Toast.makeText(DownloadService.this,"Download Success in Movie Folder", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DownloadService.this,"Download Success in Download Folder", Toast.LENGTH_SHORT).show();
             Intent local = new Intent();
 
             local.setAction("DownloadSuccess");

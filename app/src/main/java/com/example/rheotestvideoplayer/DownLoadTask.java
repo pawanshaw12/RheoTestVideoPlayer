@@ -81,7 +81,7 @@ public class DownLoadTask extends AsyncTask<String, Integer, Integer> {
         try{
             long downloadLength = 0;
             String downloadUri = params[0];
-            String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath();
+            String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
             file = new File(directory + "/test.mp4");
             if(file.exists()){
                 downloadLength = file.length();
