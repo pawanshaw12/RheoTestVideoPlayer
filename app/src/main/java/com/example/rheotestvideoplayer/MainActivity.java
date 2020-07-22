@@ -180,8 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        CustomVideoPlayer customVideoPlayer = findViewById(R.id.customVideoPlayer);
-        customVideoPlayer.stop();
+
         unregisterReceiver(updateUIReceiver);
         unregisterReceiver(progressUpdate);
         unbindService(connection);
