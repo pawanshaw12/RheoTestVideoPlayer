@@ -133,10 +133,7 @@ public class CustomVideoPlayer extends LinearLayout {
         return this;
     }
 
-    public CustomVideoPlayer setOnPlaybackListener(PlaybackListener playbackListener) {
-        this.playbackListener = playbackListener;
-        return this;
-    }
+
 
     public void build() {
         initializeVideoPlayerView();
@@ -234,11 +231,7 @@ public class CustomVideoPlayer extends LinearLayout {
         }
     }
 
-    public void changeUrl(String newMediaUrl) {
-        this.mediaUrl = newMediaUrl;
 
-        prepareVideoPlayer();
-    }
 
     private void prepareVideoPlayer() {
         try {
@@ -377,7 +370,6 @@ public class CustomVideoPlayer extends LinearLayout {
     };
 
     private class VideoPlayerListener implements OnClickListener, SeekBar.OnSeekBarChangeListener, ExoPlayer.EventListener, VideoRendererEventListener, AudioRendererEventListener {
-        boolean fullscreen = false;
         @Override
         public void onClick(View view) {
             int viewId = view.getId();
@@ -385,10 +377,6 @@ public class CustomVideoPlayer extends LinearLayout {
                 playbackListener.onVolumeChange(autoMute);
                 autoMute = !autoMute;
                 manageMute();
-
-
-
-
             }
         }
 
