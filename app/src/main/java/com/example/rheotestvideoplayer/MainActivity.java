@@ -7,14 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,11 +32,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private DownloadService.DownloadBinder downloadBinder;
     private Button startDownload;
+
     private BroadcastReceiver updateUIReceiver;
     private BroadcastReceiver progressUpdate;
     private ProgressBar pgsBar;
+    private boolean checkfile;
+    public static final String CHECKFILE="checkfile";
+    public static final String SHARED_PREFS="sharedPrefs";
 
-
+    int progressU;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -51,14 +59,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         pgsBar=findViewById(R.id.progressBar);
 
-
+        loadData();
         //Setting up the Player
-        CustomVideoPlayer customVideoPlayer = findViewById(R.id.customVideoPlayer);
+        final CustomVideoPlayer customVideoPlayer = findViewById(R.id.customVideoPlayer);
         String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getPath();
         File file = new File(directory + "/test.mp4");
         String Url= String.valueOf(Uri.fromFile(file));
         //If File exists then Show the Player
-        if(file.exists()) {
+
+        if(file.exists() && checkfile) {
 
             customVideoPlayer.setVisibility(View.VISIBLE);
             customVideoPlayer.setMediaUrl(Url)
@@ -67,7 +76,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .hideControllers(false)
                     .setMaxHeight(500)
                     .build();
-            pgsBar.setVisibility(View.GONE); //
+
+
+        }
+        else
+        {
+            saveDataFalse();
         }
 
         //Update ProgressBar using BroadCast Receiver
@@ -81,7 +95,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onReceive(Context context, Intent intent) {
                 //UI update here
                 Bundle bundle=intent.getExtras();
-                pgsBar.setProgress(bundle.getInt("Progress"));
+                 progressU=bundle.getInt("Progress");
+
+                if(progressU>0 && progressU<100) {
+                    pgsBar.setVisibility(View.VISIBLE);
+
+                }
+                if(progressU==100)
+                    pgsBar.setVisibility(View.INVISIBLE);
+                pgsBar.setProgress(progressU);
 
             }
         };
@@ -93,11 +115,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         IntentFilter filter = new IntentFilter();
         filter.addAction("DownloadSuccess");
 
+
          updateUIReceiver = new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                //UI update here
+                saveData();
                 CustomVideoPlayer customVideoPlayer = findViewById(R.id.customVideoPlayer);
                 customVideoPlayer.setVisibility(View.VISIBLE);
                 String directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).getAbsolutePath();
@@ -170,6 +193,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             default:
         }
     }
+
+    public void saveData()
+    {
+        SharedPreferences sharedPreferences= getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        editor.putBoolean(CHECKFILE,true);
+        editor.apply();
+    }
+    public void saveDataFalse()
+    {
+        SharedPreferences sharedPreferences= getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        SharedPreferences.Editor editor= sharedPreferences.edit();
+        editor.putBoolean(CHECKFILE,false);
+        editor.apply();
+    }
+    public void loadData()
+    {
+        SharedPreferences sharedPreferences= getSharedPreferences(SHARED_PREFS,MODE_PRIVATE);
+        checkfile=sharedPreferences.getBoolean(CHECKFILE,false);
+    }
+
+
     @Override
     protected void onPause() {
         super.onPause();

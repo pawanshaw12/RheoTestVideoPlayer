@@ -133,7 +133,10 @@ public class CustomVideoPlayer extends LinearLayout {
         return this;
     }
 
-
+    public CustomVideoPlayer setOnPlaybackListener(PlaybackListener playbackListener) {
+        this.playbackListener = playbackListener;
+        return this;
+    }
 
     public void build() {
         initializeVideoPlayerView();
